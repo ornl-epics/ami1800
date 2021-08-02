@@ -1,0 +1,6 @@
+file AMI1800.template
+{
+pattern {S, TA, DN}
+        {SECAGE, SE, AMI18001}
+}
+

@@ -1,0 +1,39 @@
+OutTerminator = CR LF;
+LockTimeout = 10000;
+ReplyTimeout = 1000;
+ReadTimeout = 500;
+WriteTimeout = 1000;
+ExtraInput = Ignore;
+InTerminator = LF;
+#########################################################
+
+#This command is used to read the level1
+ReadLvl1    {
+   out "T1:MEAS?"; in "%f"	
+}
+
+#This command is used to read the level2
+ReadLvl2    {
+   out "T2:MEAS?"; in "%f"
+}
+
+#This command is used to read the level3
+ReadLvl3    {
+   out "T3:MEAS?"; in "%f"
+}
+
+#This command is used to read the Alarm1
+ReadAlarm1    {
+   out "V1?"; in "%i"
+}
+
+#This command is used to read the Alarm2
+ReadAlarm2    {
+   out "V2?"; in "%i"
+}
+
+#This command is used to read the Alarm3
+ReadAlarm3    {
+   out "V3?"; in "%i"
+}
+

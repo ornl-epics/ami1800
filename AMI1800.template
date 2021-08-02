@@ -1,0 +1,257 @@
+#Get level for the first sensor
+record(ai, "$(S):$(TA):$(DN):LVL1")
+{
+        field(DESC, "Nitrogen Level1")
+        field(DTYP, "stream")
+        field(INP, "@AMI1800.proto ReadLvl1 AMI1800One")
+        field(EGU,"%")
+        field(HOPR, "100")
+        field(LOPR, "0")
+        field(PREC,"3")
+        field(MDEL,"1.0")
+        field(ADEL,"1.0")
+        field(SCAN, "10 second")
+	field(LOLO, "20.0")
+        field(LLSV, "MAJOR")
+        field(SDIS, "$(S):$(TA):$(DN):SDIS1")
+        info(autosaveFields, "LOLO")
+        info(archive, "monitor, 00:00:10")
+}
+
+#get level of second sensor
+
+record(ai, "$(S):$(TA):$(DN):LVL2")
+{
+        field(DESC, "Helium Level2")
+        field(DTYP, "stream")
+        field(INP, "@AMI1800.proto ReadLvl2 AMI1800One")
+        field(EGU,"%")
+        field(HOPR, "100")
+        field(LOPR, "0")
+        field(PREC,"3")
+        field(MDEL,"1.0")
+        field(ADEL,"1.0")
+        field(SCAN, "10 second")
+        field(LOLO, "20.0")
+        field(LLSV, "MAJOR")
+        field(SDIS, "$(S):$(TA):$(DN):SDIS2")
+        info(autosaveFields, "LOLO")
+        info(archive, "monitor, 00:00:10")
+}
+
+#get level of third sensor
+
+record(ai, "$(S):$(TA):$(DN):LVL3")
+{
+        field(DESC, "Dewer Level")
+        field(DTYP, "stream")
+        field(INP, "@AMI1800.proto ReadLvl3 AMI1800One")
+        field(EGU,"%")
+        field(HOPR, "100")
+        field(LOPR, "0")
+        field(PREC,"3")
+        field(MDEL,"1.0")
+        field(ADEL,"1.0")
+        field(SCAN, "10 second")
+        field(LOLO, "20.0")
+        field(LLSV, "MAJOR")
+        field(SDIS, "$(S):$(TA):$(DN):SDIS3")
+        info(autosaveFields, "LOLO")
+        info(archive, "monitor, 00:00:10")
+}
+
+# Names of the cryogens
+
+record(stringout, "$(S):$(TA):$(DN):NAME1")
+{
+  field(VAL, "N2")
+  field(PINI, "YES")
+  info(autosaveFields, "VAL")  
+}
+
+record(stringout, "$(S):$(TA):$(DN):NAME2")
+{
+  field(VAL, "He")
+  field(PINI, "YES")
+  info(autosaveFields, "VAL")  
+}
+
+record(stringout, "$(S):$(TA):$(DN):NAME3")
+{
+  field(VAL, "D")
+  field(PINI, "YES")
+  info(autosaveFields, "VAL")  
+}
+
+# Option to disable polling so we don't generate log file errors
+record(bo, "$(S):$(TA):$(DN):SDIS1")
+{
+  field(ZNAM, "Enabled")
+  field(ONAM, "Disabled")
+  field(VAL, "0")
+  field(PINI, "YES")
+  field(ASG, "ALWAYS")
+  info(autosaveFields, "VAL")
+  info(archive, "monitor, 00:00:10")
+}
+record(bo, "$(S):$(TA):$(DN):SDIS2")
+{
+  field(ZNAM, "Enabled")
+  field(ONAM, "Disabled")
+  field(VAL, "0")
+  field(PINI, "YES")
+  field(ASG, "ALWAYS")
+  info(autosaveFields, "VAL")
+  info(archive, "monitor, 00:00:10")
+}
+record(bo, "$(S):$(TA):$(DN):SDIS3")
+{
+  field(ZNAM, "Enabled")
+  field(ONAM, "Disabled")
+  field(VAL, "0")
+  field(PINI, "YES")
+  field(ASG, "ALWAYS")
+  info(autosaveFields, "VAL")
+  info(archive, "monitor, 00:00:10")
+}
+
+#If we disable a sensor, then disable the alarm
+record(calcout, "$(S):$(TA):$(DN):AlarmCtrl1")
+{
+  field(INPA, "$(S):$(TA):$(DN):SDIS1 CP")
+  field(CALC, "A==1?0:1")
+  field(DOPT, "Use CALC")
+  field(OOPT, "When Zero")
+  field(OUT, "$(S):$(TA):$(DN):AlarmEnable1 PP")
+}
+record(calcout, "$(S):$(TA):$(DN):AlarmCtrl2")
+{
+  field(INPA, "$(S):$(TA):$(DN):SDIS2 CP")
+  field(CALC, "A==1?0:1")
+  field(DOPT, "Use CALC")
+  field(OOPT, "When Zero")
+  field(OUT, "$(S):$(TA):$(DN):AlarmEnable2 PP")
+}
+record(calcout, "$(S):$(TA):$(DN):AlarmCtrl3")
+{
+  field(INPA, "$(S):$(TA):$(DN):SDIS3 CP")
+  field(CALC, "A==1?0:1")
+  field(DOPT, "Use CALC")
+  field(OOPT, "When Zero")
+  field(OUT, "$(S):$(TA):$(DN):AlarmEnable3 PP")
+}
+
+#**************************************************************
+#**************************************************************
+#ALARMS START HERE
+#These are for local IOC within this database
+record(bi, "$(S):$(TA):$(DN):AlarmEnable1")
+{
+        field(DESC, "LVL1 Alarm Enable")
+        field(ZNAM, "Alarm Disabled")
+        field(ONAM, "Alarm Enabled")
+	field(ASG, "ALWAYS")
+        field(PINI, "YES")
+        field(ZSV, "MINOR")
+        field(FLNK, "$(S):$(TA):$(DN):LocalAlarm1")	
+        info(autosaveFields, "VAL")
+        info(archive, "monitor, 00:00:10")
+}
+
+record(bi, "$(S):$(TA):$(DN):AlarmEnable2")
+{
+        field(DESC, "LVL2 Alarm Enable")
+        field(ZNAM, "Alarm Disabled")
+        field(ONAM, "Alarm Enabled")
+        field(ASG, "ALWAYS")
+        field(PINI, "YES")
+        field(ZSV, "MINOR")	
+        field(FLNK, "$(S):$(TA):$(DN):LocalAlarm2")	
+        info(autosaveFields, "VAL")
+        info(archive, "monitor, 00:00:10")
+}
+
+record(bi, "$(S):$(TA):$(DN):AlarmEnable3")
+{
+        field(DESC, "LVL3 Alarm Enable")
+        field(ZNAM, "Alarm Disabled")
+        field(ONAM, "Alarm Enabled")
+        field(ASG, "ALWAYS")
+        field(PINI, "YES")
+        field(ZSV, "MINOR")	
+        field(FLNK, "$(S):$(TA):$(DN):LocalAlarm3")	
+        info(autosaveFields, "VAL")
+        info(archive, "monitor, 00:00:10")
+}
+
+record(calc, "$(S):$(TA):$(DN):LocalAlarm1")
+{
+    field(DESC, "lolo > lvl1 Major or 1")
+    field(INPA, "$(S):$(TA):$(DN):LVL1.LOLO CP")
+    field(INPB, "$(S):$(TA):$(DN):LVL1 CP")
+    field(INPC, "$(S):$(TA):$(DN):LVL1.SEVR CP")
+    field(INPD, "$(S):$(TA):$(DN):AlarmEnable1 CP")    
+    field(CALC, "(((A>B)||(C!=0))&D?1:0)")
+    field(HIHI, "1")
+    field(LOLO, "0")
+    field(LLSV, "NO_ALARM")
+    field(HHSV, "MAJOR")
+    info(archive, "monitor, 00:00:10")
+}
+
+record(calc, "$(S):$(TA):$(DN):LocalAlarm2")
+{
+    field(DESC, "lolo > lvl2 Major or 1")
+    field(INPA, "$(S):$(TA):$(DN):LVL2.LOLO CP")
+    field(INPB, "$(S):$(TA):$(DN):LVL2 CP")
+    field(INPC, "$(S):$(TA):$(DN):LVL2.SEVR CP")
+    field(INPD, "$(S):$(TA):$(DN):AlarmEnable2 CP")
+    field(CALC, "(((A>B)||(C!=0))&D?1:0)")
+    field(HIHI, "1")
+    field(LOLO, "0")
+    field(LLSV, "NO_ALARM")
+    field(HHSV, "MAJOR")
+    info(archive, "monitor, 00:00:10")
+}
+
+record(calc, "$(S):$(TA):$(DN):LocalAlarm3")
+{
+    field(DESC, "lolo > lvl3 Major or 1")
+    field(INPA, "$(S):$(TA):$(DN):LVL3.LOLO CP")
+    field(INPB, "$(S):$(TA):$(DN):LVL3 CP")
+    field(INPC, "$(S):$(TA):$(DN):LVL3.SEVR CP")
+    field(INPD, "$(S):$(TA):$(DN):AlarmEnable3 CP")
+    field(CALC, "(((A>B)||(C!=0))&D?1:0)")
+    field(HIHI, "1")
+    field(LOLO, "0")
+    field(LLSV, "NO_ALARM")
+    field(HHSV, "MAJOR")
+    info(archive, "monitor, 00:00:10")
+}
+
+#**************************************************************
+##**************************************************************
+##This section created the global alarm  
+#true that is 1 or Major, trigger the global alarm. 
+#
+record(calc, "$(S):$(TA):$(DN):GlobalAlarmOK")
+{
+    field(DESC, "GlobalAlarm")
+    field(INPA, "$(S):$(TA):$(DN):LocalAlarm1 CP")
+    field(INPB, "$(S):$(TA):$(DN):LocalAlarm2 CP")
+    field(INPC, "$(S):$(TA):$(DN):LocalAlarm3 CP")
+    field(CALC, "!A&!B&!C")
+    field(HHSV, "NO_ALARM")
+    field(LLSV, "MAJOR")
+    field(HIHI, "1")
+    field(LOLO, "0")		
+    info(archive, "monitor, 00:00:10")
+}
+
+
+
+
+
+
+
+
