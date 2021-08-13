@@ -8,6 +8,13 @@ Ethernet interfaces.
 
 
 The EPICS driver communicates directly using TCP/IP basic Text ASCII SCPI format. 
+POe sensor using DHCP. The AMI1800 is used for the LHeAF Liquid He AutoFill System.
+
+The two most common cryogenic liquids used in superconducting magnet 
+systems are nitrogen and helium. Both of these cryogens are extremely 
+cold at atmospheric pressure (321°F and 452°F, respectively). The 
+following paragraphs outline safe handling precautions for these liquids.
+
 
 
 
